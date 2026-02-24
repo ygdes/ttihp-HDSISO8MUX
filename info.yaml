@@ -1,6 +1,6 @@
 # Tiny Tapeout project information
 project:
-  title:        "ttihp-HDSISO8_MUX"  # Project title
+  title:        "ttihp-HDSISO8MUX"  # Project title
   author:       "Yann Guidon"    # Your name
   discord:      "the_yasep"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "Higher density Shift register - MUX version"   # One line description of what your project does
