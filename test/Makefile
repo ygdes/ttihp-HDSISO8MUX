@@ -1,18 +1,21 @@
 # Makefile
 # See https://docs.cocotb.org/en/stable/quickstart.html for more info
+# modified to allow RTL simulation of the IHP PDK
 
 # defaults
 SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v
+PROJECT_SOURCES = project.v lfsr8.v johnson8.v SISO_mux.v
+# SISO_latch.v is left in the directory but not used in this implementation/tile
 
 ifneq ($(GATES),yes)
 
 # RTL simulation:
 SIM_BUILD				= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
+VERILOG_SOURCES += $(PWD)/sg13g2_*.v   # added by yg to support the native cells from the IHP PDK
 
 else
 
