@@ -1,6 +1,6 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Tiny Tapeout Project: HDSISO8_MUX
+# Tiny Tapeout Project: HDSISO8MUX
 
 This is a prototype of a shift register that explores how to store data more densely than classic DFFs could, using the specific IHP CMOS PDK. This version uses sg13g2_mux2_1, another tile implements the exact same logic using the larger sg13g2_dlhq_1 for comparison.
 
