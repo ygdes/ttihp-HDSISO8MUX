@@ -7,7 +7,7 @@
 
 `default_nettype none
 
-module tt_um_ygdes_hdsiso8_mux2 (
+module tt_um_ygdes_hdsiso8_dlhq (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -111,64 +111,60 @@ module tt_um_ygdes_hdsiso8_mux2 (
     .DFF4(Johnson4),
     .Decoded8(Decoded8));
 
+/* version : direct loopback, 20 cycles
+  wire [3:0] siso_start_even, siso_start_odd;
 
-// JUST A TEST FOR NOW  !!!! The MUX/DEMUX IS STILL MISSING SO IT'S F/8
+  siso_demux_mux_dl demux_mux(
+    .RESET(INT_RESET),
+    .CLK(CLK_OUT),
+    .Din(SISO_in),
+    .Latch8(Decoded8),
+    .siso_first_even(siso_start_even),
+    .siso_first_odd(siso_start_odd),
+    .siso_last_even(siso_start_even),
+    .siso_last_odd(siso_start_odd),
+    .Dout(D_OUT));
+*/
 
-  // looping the SISO on itself to get 8× downsampling because no demux yet
+/* longer version, 384+96+22=502 cycles,
+    about 9 cycles in "advance" of the LFSR period pulse */
+  wire [3:0] siso_start_even, siso_start_odd;
+  wire [3:0] siso_chain_even, siso_chain_odd;
+  wire [3:0] latch4_even, latch4_odd;
+  wire [3:0] siso_end_even, siso_end_odd;
 
-  // First, sample the data at the right moment
-  wire back;
-    (* keep *) sg13g2_sdfrbpq_1 sync8(.Q(back), .D(back),
-       .SCD(SISO_in), .SCE(Decoded8[5]), .RESET_B(INT_RESET), .CLK(CLK_OUT));
+  siso_demux_mux_dl demux_mux(
+    .RESET(INT_RESET),
+    .CLK(CLK_OUT),
+    .Din(SISO_in),
+    .Latch8(Decoded8),
+    .Latch_even(latch4_even),
+    .Latch_odd(latch4_odd),
+    .siso_first_even(siso_start_even),
+    .siso_first_odd(siso_start_odd),
+    .siso_last_even(siso_end_even),
+    .siso_last_odd(siso_end_odd),
+    .Dout(D_OUT));
 
-  wire [3:0] siso_in4, siso_out4, latch4, latch4neg,
-          chain4_a, chain4_b, chain4_c, chain4_d, chain4_e ;    // l'originalité des noms de variables......
-  assign siso_in4[0] = back;
-  assign siso_in4[1] = siso_out4[0];
-  assign siso_in4[2] = siso_out4[1];  // au diable la syntaxe,
-  assign siso_in4[3] = siso_out4[2];  // mate le formatage
-  assign D_OUT       = siso_out4[3];
-  assign latch4 = {
-    Decoded8[0], // the first latch's data is locked during the transition from [0] to [1]
-    Decoded8[2],
-    Decoded8[4], // Input is sampled by sync8 at [5] so setup&hold should be comfortable.
-    Decoded8[6]
-  };
-  Inverters_x4 BoostLatch(.Y(latch4neg), .A(latch4));
+// plugging 256*2 latches, or 384 bits
+  siso_tranche4x4x4x4_dl_pos siso256_1(
+    .siso_in(siso_start_even),
+    .siso_out(siso_chain_even),
+    .latch(latch4_even)); // not neg here.
+  siso_tranche4x4x4x4_dl_pos siso256_2(
+    .siso_in(siso_start_odd),
+    .siso_out(siso_chain_odd),
+    .latch(latch4_odd)); // not neg here.
 
-// goal=512 bits, actual storage is × 4/3 = 682
-// 2×( 256+64+16 ) = 672 bits, close enough.
-
-  siso_tranche4x4x4x4_mx_pos siso256_1(
-    .siso_in(siso_in4),
-    .siso_out(chain4_a),
-    .latch(latch4));
-
-  siso_tranche4x4x4x4_mx_pos siso256_2(
-    .siso_in(chain4_a),
-    .siso_out(chain4_b),
-    .latch(latch4));
-
-  siso_tranche4x4x4_mx_pos siso64_1(
-    .siso_in(chain4_b),
-    .siso_out(chain4_c),
-    .latch(latch4));
-
-  siso_tranche4x4x4_mx_pos siso64_2(
-    .siso_in(chain4_c),
-    .siso_out(chain4_d),
-    .latch(latch4));
-
-  siso_tranche4x4_mx_neg siso16_1(
-    .siso_in(chain4_d),
-    .siso_out(chain4_e),
-    .latch(latch4neg));  // NEG here
-
-  siso_tranche4x4_mx_neg siso16_2(
-    .siso_in(chain4_e),
-    .siso_out(siso_out4),
-    .latch(latch4neg));  // NEG here too
-
+// plugging 64*2 latches, or 96 bits
+  siso_tranche4x4x4_dl_pos siso64_1(
+    .siso_in(siso_chain_even),
+    .siso_out(siso_end_even),
+    .latch(latch4_even)); // not neg here.
+  siso_tranche4x4x4_dl_pos siso64_2(
+    .siso_in(siso_chain_odd),
+    .siso_out(siso_end_odd),
+    .latch(latch4_odd)); // not neg here.
 
 ////////////////////////////// All the dummies go here //////////////////////////////
 
