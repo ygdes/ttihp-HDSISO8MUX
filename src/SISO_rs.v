@@ -7,7 +7,7 @@
  * Check the /doc and the diagrams at
  *   https://github.com/ygdes/ttihp-HDSISO8RS/tree/main/docs
  *
- * 4 versions are provided:
+ * 4 sizes are provided:
  *  - siso_slice4_rs_neg         stores 4 bits in parallel, driven by one inv_4.
  *  - siso_tranche4x4_rs_neg     stores 16 bits (12 effective).
  *  - siso_tranche4x4x4_rs_pos   stores 64 bits, control pulse polarity is back to positive.
@@ -23,19 +23,16 @@
 
 //.................................................................................
 
-
 // Just a 4-bit interter-buffer to keep the code size down.
-// area : 4 × 10.9 = 43.6
+// area : 4 × 5.4432 = 21.778
 module Inverters_x4 (
     input  wire [3:0] A,
     output wire [3:0] Y);
-
-  (* keep *) sg13g2_inv_4  Amp0(.Y(Y[0]), .A(A[0]));
-  (* keep *) sg13g2_inv_4  Amp1(.Y(Y[1]), .A(A[1]));
-  (* keep *) sg13g2_inv_4  Amp2(.Y(Y[2]), .A(A[2]));
-  (* keep *) sg13g2_inv_4  Amp3(.Y(Y[3]), .A(A[3]));
+  (* keep *) sg13g2_inv_1  Amp0(.Y(Y[0]), .A(A[0]));
+  (* keep *) sg13g2_inv_1  Amp1(.Y(Y[1]), .A(A[1]));
+  (* keep *) sg13g2_inv_1  Amp2(.Y(Y[2]), .A(A[2]));
+  (* keep *) sg13g2_inv_1  Amp3(.Y(Y[3]), .A(A[3]));
 endmodule
-
 
 //.................................................................................
 
@@ -62,6 +59,7 @@ endmodule
 
 //.................................................................................
 
+// 5.4432 + 4 × 18.144 = 78.0192
 module siso_slice4_rs_neg (        // Pulse low to latch
     input  wire [3:0] siso_in,     // 4 staggered data inputs
     input  wire [3:0] siso_in_N,   // 4 staggered data inputs
@@ -69,9 +67,8 @@ module siso_slice4_rs_neg (        // Pulse low to latch
     output wire [3:0] siso_out_N,  // 4 staggered data outputs
     input  wire       latch        // pass/keep signal
 );
-
   wire latch_n;
-  (* keep *) sg13g2_inv_4 Amp(.Y(latch_n), .A(latch));
+  (* keep *) sg13g2_inv_1 Amp(.Y(latch_n), .A(latch));
   (* keep *) RSFF_pos l0(.Q(siso_out[0]), .Q_N(siso_out_N[0]), .D(siso_in[0]), .D_N(siso_in_N[0]), .EN(latch_n));
   (* keep *) RSFF_pos l1(.Q(siso_out[1]), .Q_N(siso_out_N[1]), .D(siso_in[1]), .D_N(siso_in_N[1]), .EN(latch_n));
   (* keep *) RSFF_pos l2(.Q(siso_out[2]), .Q_N(siso_out_N[2]), .D(siso_in[2]), .D_N(siso_in_N[2]), .EN(latch_n));
@@ -85,20 +82,22 @@ module siso_slice4_rs_pos (        // Pulse high to latch
     output wire [3:0] siso_out_N,  // 4 staggered data outputs
     input  wire       latch        // pass/keep signal
 );
-
   wire latch_n;
-  (* keep *) sg13g2_inv_4 Amp(.Y(latch_n), .A(latch));
+  (* keep *) sg13g2_inv_1 Amp(.Y(latch_n), .A(latch));
   (* keep *) RSFF_neg l0(.Q(siso_out[0]), .Q_N(siso_out_N[0]), .D(siso_in[0]), .D_N(siso_in_N[0]), .EN(latch_n));
   (* keep *) RSFF_neg l1(.Q(siso_out[1]), .Q_N(siso_out_N[1]), .D(siso_in[1]), .D_N(siso_in_N[1]), .EN(latch_n));
   (* keep *) RSFF_neg l2(.Q(siso_out[2]), .Q_N(siso_out_N[2]), .D(siso_in[2]), .D_N(siso_in_N[2]), .EN(latch_n));
   (* keep *) RSFF_neg l3(.Q(siso_out[3]), .Q_N(siso_out_N[3]), .D(siso_in[3]), .D_N(siso_in_N[3]), .EN(latch_n));
 endmodule
 
-
 //.................................................................................
 
 // Adds 32 latches, 16*2(*3/4) = 24 cycles, + 3DFF => 27 cycles
 // The "better" version adds only 20 cycles => 23 cycles of delay
+// area: 8×78.0192 = 624.1536
+//     + 10.8864 + 3×68.9472 = 841.4416
+//   + 4×10.8486 + 2×7.2576 = 899.7912
+// (not including the external Johnson counter)
 module siso_demux_mux_rs(
     input  wire       RESET,
     input  wire       CLK,
@@ -174,23 +173,40 @@ module siso_demux_mux_rs(
 endmodule
 
 
-/*
 //.................................................................................
 
-// area: 4 × 134.1 = 536.4
+// area: 4 × 134.1 = 536.4 (DLHQ
+//   4×78.0192 = 312.0768 (RS)
 // 16 latches hold 12 bits
-module siso_tranche4x4_dl_neg (  // Pulse low to latch
-    input  wire [3:0] siso_in,   // 4 staggered data inputs
-    output wire [3:0] siso_out,  // 4 staggered data outputs
-    input  wire [3:0] latch      // pass/keep signals
+module siso_tranche4x4_rs_neg (
+    input  wire [3:0] siso_in,     // 4 staggered data inputs
+    input  wire [3:0] siso_in_N,   // 4 staggered data inputs (complementary)
+    output wire [3:0] siso_out,    // 4 staggered data outputs
+    output wire [3:0] siso_out_N,  // 4 staggered data outputs (complementary)
+    input  wire [3:0] latch        // pass/keep signals / Pulse low to latch
 );
-
-  wire [3:0] t1, t2, t3;
-  siso_slice4_dl_neg slice0(.siso_in(siso_in), .siso_out(t1),       .latch(latch[3]));
-  siso_slice4_dl_neg slice1(.siso_in(t1),      .siso_out(t2),       .latch(latch[2])); // p in reverse order
-  siso_slice4_dl_neg slice2(.siso_in(t2),      .siso_out(t3),       .latch(latch[1]));
-  siso_slice4_dl_neg slice3(.siso_in(t3),      .siso_out(siso_out), .latch(latch[0]));
+  wire [3:0] t1, t2, t3, t1N, t2N, t3N;
+  siso_slice4_rs_neg slice0(.siso_in(siso_in), .siso_in(siso_in_N), .siso_out(t1),       .siso_out(t1N),        .latch(latch[3]));
+  siso_slice4_rs_neg slice1(.siso_in(t1),      .siso_in(t1N),       .siso_out(t2),       .siso_out(t2N),        .latch(latch[2])); // p in reverse order
+  siso_slice4_rs_neg slice2(.siso_in(t2),      .siso_in(t2N),       .siso_out(t3),       .siso_out(t3N),        .latch(latch[1]));
+  siso_slice4_rs_neg slice3(.siso_in(t3),      .siso_in(t3N),       .siso_out(siso_out), .siso_out(siso_out_N), .latch(latch[0]));
 endmodule
+
+module siso_tranche4x4_rs_pos (
+    input  wire [3:0] siso_in,     // 4 staggered data inputs
+    input  wire [3:0] siso_in_N,   // 4 staggered data inputs (complementary)
+    output wire [3:0] siso_out,    // 4 staggered data outputs
+    output wire [3:0] siso_out_N,  // 4 staggered data outputs (complementary)
+    input  wire [3:0] latch        // pass/keep signals / Pulse low to latch
+);
+  wire [3:0] t1, t2, t3, t1N, t2N, t3N;
+  siso_slice4_rs_pos slice0(.siso_in(siso_in), .siso_in(siso_in_N), .siso_out(t1),       .siso_out(t1N),        .latch(latch[3]));
+  siso_slice4_rs_pos slice1(.siso_in(t1),      .siso_in(t1N),       .siso_out(t2),       .siso_out(t2N),        .latch(latch[2])); // p in reverse order
+  siso_slice4_rs_pos slice2(.siso_in(t2),      .siso_in(t2N),       .siso_out(t3),       .siso_out(t3N),        .latch(latch[1]));
+  siso_slice4_rs_pos slice3(.siso_in(t3),      .siso_in(t3N),       .siso_out(siso_out), .siso_out(siso_out_N), .latch(latch[0]));
+endmodule
+
+/*
 
 //.................................................................................
 
