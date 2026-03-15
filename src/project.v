@@ -2,12 +2,13 @@
  * Copyright (c) 2026 Yann Guidon / whygee@f-cpu.org
  * SPDX-License-Identifier: Apache-2.0
  * Check the /doc and the diagrams at
- *   https://github.com/ygdes/ttihp-HDSISO8/tree/main/docs
+ *   https://github.com/ygdes/ttihp-HDSISO8RS/tree/main/docs
+ * This version uses RS latches based on the A21OI cell.
  */
 
 `default_nettype none
 
-module tt_um_ygdes_hdsiso8_dlhq (
+module tt_um_ygdes_hdsiso8_rs (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
