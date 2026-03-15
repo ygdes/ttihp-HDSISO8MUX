@@ -112,10 +112,11 @@ module tt_um_ygdes_hdsiso8_rs (
     .DFF4(Johnson4),
     .Decoded8(Decoded8));
 
-/* version : direct loopback, 20 cycles
-  wire [3:0] siso_start_even, siso_start_odd;
+// version : direct loopback, 20 cycles
+  wire [3:0] siso_start_even,   siso_start_odd,
+             siso_start_even_N, siso_start_odd_N;
 
-  siso_demux_mux_dl demux_mux(
+  siso_demux_mux_rs demux_mux(
     .RESET(INT_RESET),
     .CLK(CLK_OUT),
     .Din(SISO_in),
@@ -124,17 +125,22 @@ module tt_um_ygdes_hdsiso8_rs (
     .siso_first_odd(siso_start_odd),
     .siso_last_even(siso_start_even),
     .siso_last_odd(siso_start_odd),
+    .siso_first_even_N(siso_start_even_N),
+    .siso_first_odd_N(siso_start_odd_N),
+    .siso_last_even_N(siso_start_even_N),
+    .siso_last_odd_N(siso_start_odd_N),
     .Dout(D_OUT));
-*/
 
-/* longer version, 384+96+22=502 cycles,
-    about 9 cycles in "advance" of the LFSR period pulse */
+
+/*
+//longer version, 384+96+22=502 cycles,
+//    about 9 cycles in "advance" of the LFSR period pulse
   wire [3:0] siso_start_even, siso_start_odd;
   wire [3:0] siso_chain_even, siso_chain_odd;
   wire [3:0] latch4_even, latch4_odd;
   wire [3:0] siso_end_even, siso_end_odd;
 
-  siso_demux_mux_dl demux_mux(
+  siso_demux_mux_rs demux_mux(
     .RESET(INT_RESET),
     .CLK(CLK_OUT),
     .Din(SISO_in),
@@ -166,6 +172,7 @@ module tt_um_ygdes_hdsiso8_rs (
     .siso_in(siso_chain_odd),
     .siso_out(siso_end_odd),
     .latch(latch4_odd)); // not neg here.
+*/
 
 ////////////////////////////// All the dummies go here //////////////////////////////
 
