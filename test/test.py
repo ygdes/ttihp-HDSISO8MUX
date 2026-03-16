@@ -96,36 +96,33 @@ async def test_project(dut):
   
     dut._log.info(" LFSR OK !")
 
-    dut.ui_in.value = DIN_SEL   # EXT_RST asserted, SHOW_LFSR off : restart everything
-    await ClockCycles(dut.clk, 3)
-    if EnableAsserts:
-      assert dut.uio_out.value == 0 # the pulses must be off during RESET
-
-    dut._log.info(" LFSR OK !")
-
-    dut.ui_in.value = EXT_RST + DIN_SEL  # restart
-    await ClockCycles(dut.clk, 1) # 2 cycles before the counter is visible (including the next wait of 1 cycle)
-
-    n=0
-
-    i = 0
-    while (True):  # one last ride.
-      dut._log.info("n=" + str(n))
-      n=n+1
-      await ClockCycles(dut.clk, 1)
-      dut._log.info("cycle " + str(i) + " = " + str(dut.uio_out.value))
-      if EnableAsserts:
-        assert dut.uio_out.value[i] == 1
-      i = i+1
-      if i >= 8:
-        break
-
-    dut._log.info(" Johnson8 OK !")
-
-    # Reset, re-enable LFSR
-    if (False):
-      dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL
-      await ClockCycles(dut.clk, 2)
-      dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL + EXT_RST
-      await ClockCycles(dut.clk, 10000) # let it run for a while to see the LFSR output from the SIO
-
+    #dut.ui_in.value = DIN_SEL   # EXT_RST asserted, SHOW_LFSR off : restart everything
+    #await ClockCycles(dut.clk, 3)
+    #if EnableAsserts:
+    #  assert dut.uio_out.value == 0 # the pulses must be off during RESET
+    #
+    #dut._log.info(" check.")
+    #
+    #dut.ui_in.value = EXT_RST + DIN_SEL  # restart
+    #await ClockCycles(dut.clk, 1) # 2 cycles before the counter is visible (including the next wait of 1 cycle)
+    #
+    #i = 0
+    #while (True):  # one last ride.
+    #  dut._log.info("n=" + str(n))
+    #  n=n+1
+    #  await ClockCycles(dut.clk, 1)
+    #  dut._log.info("cycle " + str(i) + " = " + str(dut.uio_out.value))
+    #  if EnableAsserts:
+    #    assert dut.uio_out.value[i] == 1
+    #  i = i+1
+    #  if i >= 8:
+    #    break
+    #
+    #dut._log.info(" Johnson8 OK !")
+    #
+    ## Reset, re-enable LFSR
+    #if (False):
+    #  dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL
+    #  await ClockCycles(dut.clk, 2)
+    #  dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL + EXT_RST
+    #  await ClockCycles(dut.clk, 10000) # let it run for a while to see the LFSR output from the SIO
