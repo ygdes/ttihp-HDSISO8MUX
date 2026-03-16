@@ -111,7 +111,7 @@ module tt_um_ygdes_hdsiso8_rs (
     .RESET(INT_RESET),
     .DFF4(Johnson4),
     .Decoded8(Decoded8));
-
+/*
 // version : direct loopback, 23 cycles
   wire [3:0] siso_start_even,   siso_start_odd,
              siso_start_even_N, siso_start_odd_N,
@@ -133,8 +133,8 @@ module tt_um_ygdes_hdsiso8_rs (
     .siso_last_even_N(siso_start_even_N),
     .siso_last_odd_N(siso_start_odd_N),
     .Dout(D_OUT));
+*/
 
-/*
 // version : 23+24 = 47 cycles
   wire [3:0]  latch4_even, latch4_odd,
     siso_start_even, siso_start_even_N, siso_start_odd, siso_start_odd_N,
@@ -170,7 +170,6 @@ module tt_um_ygdes_hdsiso8_rs (
     .siso_out(siso_end_odd),
     .siso_out_N(siso_end_odd_N),
     .latch(latch4_odd));
-*/
 
 /*
 
