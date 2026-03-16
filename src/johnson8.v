@@ -27,14 +27,13 @@ module Johnson8(
   assign DFF4 = J4P;
 
   // The decoder
-  wire [7:0] DecN;
-  (* keep *) sg13g2_a21o_2 dec0(.X(Decode8[0]), .A1(J4N[3]), .A2(J4N[0]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec1(.X(Decode8[1]), .A1(J4P[0]), .A2(J4N[1]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec2(.X(Decode8[2]), .A1(J4P[1]), .A2(J4N[2]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec3(.X(Decode8[3]), .A1(J4P[2]), .A2(J4N[3]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec4(.X(Decode8[4]), .A1(J4P[3]), .A2(J4P[0]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec5(.X(Decode8[5]), .A1(J4N[0]), .A2(J4P[1]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec6(.X(Decode8[6]), .A1(J4N[1]), .A2(J4P[2]), .B1(rstN));
-  (* keep *) sg13g2_a21o_2 dec7(.X(Decode8[7]), .A1(J4N[2]), .A2(J4P[3]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec0(.X(Decoded8[0]), .A1(J4N[3]), .A2(J4N[0]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec1(.X(Decoded8[1]), .A1(J4P[0]), .A2(J4N[1]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec2(.X(Decoded8[2]), .A1(J4P[1]), .A2(J4N[2]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec3(.X(Decoded8[3]), .A1(J4P[2]), .A2(J4N[3]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec4(.X(Decoded8[4]), .A1(J4P[3]), .A2(J4P[0]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec5(.X(Decoded8[5]), .A1(J4N[0]), .A2(J4P[1]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec6(.X(Decoded8[6]), .A1(J4N[1]), .A2(J4P[2]), .B1(rstN));
+  (* keep *) sg13g2_a21o_2 dec7(.X(Decoded8[7]), .A1(J4N[2]), .A2(J4P[3]), .B1(rstN));
 
 endmodule
