@@ -29,7 +29,7 @@ LFSR_BIT    = 128  # assign uo_out[7] = LFSR_BIT;    # LFSR output, to compare 
 
 # assign uio_out  = PULSES or LFSR depending on SHOW_LFSR;
 
-EnableAsserts = 1
+EnableAsserts = True
 
 @cocotb.test()
 async def test_project(dut):
@@ -122,4 +122,4 @@ async def test_project(dut):
       dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL
       await ClockCycles(dut.clk, 2)
       dut.ui_in.value =  LFSR_EN + SHOW_LFSR + DIN_SEL + EXT_RST
-      await ClockCycles(dut.clk, 1000) # let it run for a while to see the LFSR output from the SIO
+      await ClockCycles(dut.clk, 2000) # let it run for a while to see the LFSR output from the SIO
