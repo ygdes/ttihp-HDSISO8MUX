@@ -284,55 +284,8 @@ module tt_um_ygdes_hdsiso8_rs (
     .latch(latch4_odd));
 */
 
-/*
 
-  siso_tranche4x4x4x4_rs_pos siso256_1(
-    .siso_in   (siso_start_even),
-    .siso_in_N (siso_start_even_N),
-    .siso_out  (siso_end_even),
-    .siso_out_N(siso_end_even_N),
-    .latch(latch4_even));
-
-  siso_tranche4x4x4x4_rs_pos siso256_2(
-    .siso_in   (siso_start_odd),
-    .siso_in_N (siso_start_odd_N),
-    .siso_out  (siso_end_odd),
-    .siso_out_N(siso_end_odd_N),
-    .latch(latch4_odd));
-*/
-
-/*
-  siso_tranche4x4x4_rs_pos siso64_1(
-    .siso_in   (siso_start_even),
-    .siso_in_N (siso_start_even_N),
-    .siso_out  (chain_even),
-    .siso_out_N(chain_even_N),
-    .latch(latch4_even));
-
-  siso_tranche4x4x4_rs_pos siso64_2(
-    .siso_in   (siso_start_odd),
-    .siso_in_N (siso_start_odd_N),
-    .siso_out  (chain_odd),
-    .siso_out_N(chain_odd_N),
-    .latch(latch4_odd));
-
-  siso_tranche4x4x4_rs_pos siso64_3(
-    .siso_in   (chain_even),
-    .siso_in_N (chain_even_N),
-    .siso_out  (siso_end_even),
-    .siso_out_N(siso_end_even_N),
-    .latch(latch4_even));
-
-  siso_tranche4x4x4_rs_pos siso64_4(
-    .siso_in   (chain_odd),
-    .siso_in_N (chain_odd_N),
-    .siso_out  (siso_end_odd),
-    .siso_out_N(siso_end_odd_N),
-    .latch(latch4_odd));
-*/
-
-
-    /*
+ /*
   siso_tranche4x4x4x4_rs_pos siso256_1(
     .siso_in   (siso_start_even),
     .siso_in_N (siso_start_even_N),
@@ -349,59 +302,7 @@ module tt_um_ygdes_hdsiso8_rs (
 */
 
 
-/*
 
-// version : 23+24+96 = 143 cycles
-  wire [3:0]  latch4_even, latch4_odd,
-    siso_start_even, siso_start_even_N, siso_start_odd, siso_start_odd_N,
-    chain_even,      chain_even_N,      chain_odd,      chain_odd_N,
-    siso_end_even,   siso_end_even_N,   siso_end_odd,   siso_end_odd_N;
-
-  siso_demux_mux_rs demux_mux(
-    .RESET(INT_RESET),
-    .CLK(CLK_OUT),
-    .Din(SISO_in),
-    .Latch8(Decoded8),
-    .Latch_even(latch4_even),
-    .Latch_odd(latch4_odd),
-    .siso_first_even(siso_start_even),
-    .siso_first_odd(siso_start_odd),
-    .siso_last_even(siso_start_even),
-    .siso_last_odd(siso_start_odd),
-    .siso_first_even_N(siso_end_even_N),
-    .siso_first_odd_N(siso_end_odd_N),
-    .siso_last_even_N(siso_end_even_N),
-    .siso_last_odd_N(siso_end_odd_N),
-    .Dout(D_OUT));
-
-// plugging 16*2 latches, or 24 bits
-  siso_tranche4x4_rs_pos siso16_1(
-    .siso_in(siso_start_even),
-    .siso_in_N(siso_start_even_N),
-    .siso_out(chain_even),
-    .siso_out_N(chain_even_N),
-    .latch(latch4_even));
-  siso_tranche4x4_rs_pos siso16_2(
-    .siso_in(siso_start_odd),
-    .siso_in_N(siso_start_odd_N),
-    .siso_out(chain_odd),
-    .siso_out_N(chain_odd_N),
-    .latch(latch4_odd));
-
-// plugging 64*2 latches, or 96 bits
-  siso_tranche4x4x4_rs_pos siso64_1(
-    .siso_in(chain_even),
-    .siso_in_N(chain_even_N),
-    .siso_out(siso_end_even),
-    .siso_out_N(siso_end_even_N),
-    .latch(latch4_even));
-  siso_tranche4x4x4_rs_pos siso64_2(
-    .siso_in(chain_odd),
-    .siso_in_N(chain_odd_N),
-    .siso_out(siso_end_odd),
-    .siso_out_N(siso_end_odd_N),
-    .latch(latch4_odd));
-*/
 
 
 ////////////////////////////// All the dummies go here //////////////////////////////
@@ -411,7 +312,6 @@ module tt_um_ygdes_hdsiso8_rs (
     ena,       // They said not to bother, then ... why provide it ?
     uio_in,
     ui_in[4],
-    //latch4_even, latch4_odd,
     1'b0};
 
 endmodule
