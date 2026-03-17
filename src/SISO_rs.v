@@ -28,10 +28,10 @@
 module Inverters_x4 (
     input  wire [3:0] A,
     output wire [3:0] Y);
-  (* keep *) sg13g2_inv_1  Amp0(.Y(Y[0]), .A(A[0]));
-  (* keep *) sg13g2_inv_1  Amp1(.Y(Y[1]), .A(A[1]));
-  (* keep *) sg13g2_inv_1  Amp2(.Y(Y[2]), .A(A[2]));
-  (* keep *) sg13g2_inv_1  Amp3(.Y(Y[3]), .A(A[3]));
+  (* keep *) sg13g2_inv_4  Amp0(.Y(Y[0]), .A(A[0]));
+  (* keep *) sg13g2_inv_4  Amp1(.Y(Y[1]), .A(A[1]));
+  (* keep *) sg13g2_inv_4  Amp2(.Y(Y[2]), .A(A[2]));
+  (* keep *) sg13g2_inv_4  Amp3(.Y(Y[3]), .A(A[3]));
 endmodule
 
 //.................................................................................
@@ -68,7 +68,7 @@ module siso_slice4_rs_neg (        // Pulse low to latch
     input  wire       latch        // pass/keep signal
 );
   wire latch_n;
-  (* keep *) sg13g2_inv_1 Amp(.Y(latch_n), .A(latch));
+  (* keep *) sg13g2_inv_4 Amp(.Y(latch_n), .A(latch));
   (* keep *) RSFF_pos l0(.Q(siso_out[0]), .Q_N(siso_out_N[0]), .D(siso_in[0]), .D_N(siso_in_N[0]), .EN(latch_n));
   (* keep *) RSFF_pos l1(.Q(siso_out[1]), .Q_N(siso_out_N[1]), .D(siso_in[1]), .D_N(siso_in_N[1]), .EN(latch_n));
   (* keep *) RSFF_pos l2(.Q(siso_out[2]), .Q_N(siso_out_N[2]), .D(siso_in[2]), .D_N(siso_in_N[2]), .EN(latch_n));
@@ -83,7 +83,7 @@ module siso_slice4_rs_pos (        // Pulse high to latch
     input  wire       latch        // pass/keep signal
 );
   wire latch_n;
-  (* keep *) sg13g2_inv_1 Amp(.Y(latch_n), .A(latch));
+  (* keep *) sg13g2_inv_4 Amp(.Y(latch_n), .A(latch));
   (* keep *) RSFF_neg l0(.Q(siso_out[0]), .Q_N(siso_out_N[0]), .D(siso_in[0]), .D_N(siso_in_N[0]), .EN(latch_n));
   (* keep *) RSFF_neg l1(.Q(siso_out[1]), .Q_N(siso_out_N[1]), .D(siso_in[1]), .D_N(siso_in_N[1]), .EN(latch_n));
   (* keep *) RSFF_neg l2(.Q(siso_out[2]), .Q_N(siso_out_N[2]), .D(siso_in[2]), .D_N(siso_in_N[2]), .EN(latch_n));
