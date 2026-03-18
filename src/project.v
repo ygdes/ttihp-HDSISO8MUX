@@ -164,8 +164,8 @@ module tt_um_ygdes_hdsiso8_rs (
     chain1_even,     chain1_even_N,     chain1_odd,     chain1_odd_N,
     chain2_even,     chain2_even_N,     chain2_odd,     chain2_odd_N,
     chain3_even,     chain3_even_N,     chain3_odd,     chain3_odd_N;
-  Inverters_x4 Amp(.Y(latch4_even_N), .A(latch4_even));
-  Inverters_x4 Amp(.Y(latch4_odd_N),  .A(latch4_odd));
+  Inverters_x4 AmpE(.Y(latch4_even_N), .A(latch4_even));
+  Inverters_x4 AmpO(.Y(latch4_odd_N),  .A(latch4_odd));
 
   siso_tranche4x4x4_rs_neg siso64_1(
     .siso_in   (siso_start_even),
